@@ -1,0 +1,31 @@
+---
+# - name: Создаём переменную
+#   hosts: all
+#   tasks:
+#     - name: Создаём пеоременную в /etc/profile
+#       lineinfile:
+#         path: /etc/profile
+#         regexp: "^MY_VAR="
+#         line: "MY_VAR={{ some_variable }}"
+#         state: present
+#       become: true
+
+#     - name: Создаём пеоременную в /etc/environment
+#       lineinfile:
+#         path: /etc/environment
+#         regexp: "^MY_VAR="
+#         line: "MY_VAR={{ some_variable }}"
+#         state: present
+#       become: true
+- name: Проверяем видимость переменной
+  hosts: all
+  tasks:
+    - name: Копируем баш скрипт на таргеты
+      copy:
+        src: bash_banger.sh
+        dest: "{{ansible_user_dir}}/bash_banger.sh"
+        mode: 0755
+    - name: Запускаем и проверяем результат
+      command: "{{ansible_user_dir}}/bash_banger.sh"
+      register: bash_result
+      failed_when: bash_result.rc != 0

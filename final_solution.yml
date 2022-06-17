@@ -1,0 +1,49 @@
+---
+- name: Создаём переменную
+  hosts: all
+  vars:
+    ansible_connection: ssh
+  tasks:
+    - name: Создаём пеоременную в /etc/profile
+      lineinfile:
+        path: /etc/profile
+        regexp: "^MY_VAR="
+        line: "MY_VAR={{ some_variable }}"
+        state: present
+      become: true
+
+    - name: Создаём пеоременную в /etc/environment
+      lineinfile:
+        path: /etc/environment
+        regexp: "^MY_VAR="
+        line: "MY_VAR={{ some_variable }}"
+        state: present
+      become: true
+- name: Проверяем видимость переменной
+  hosts: all
+  vars:
+    ansible_connection: ssh
+  gather_facts: false
+  tasks:
+    - name: Делаем перезапуск соединения
+      meta: reset_connection
+    - name: Повторно собираем факты
+      setup:
+    - name: Определяем значение переменной на таргете из фактов
+      set_fact:
+        my_var: "{{ ansible_env.MY_VAR }}"
+      failed_when: my_var | length == 0
+
+    - name: Копируем баш скрипт на таргеты
+      copy:
+        src: bash_banger.sh
+        dest: "{{ansible_user_dir}}/bash_banger.sh"
+        mode: 0755
+
+    - name: Запускаем и проверяем результат
+      environment:
+        MY_VAR: "{{ my_var }}"
+      command: "{{ansible_user_dir}}/bash_banger.sh"
+      register: bash_result
+      failed_when: bash_result.rc != 0
+      become: true

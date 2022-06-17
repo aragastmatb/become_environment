@@ -1,0 +1,19 @@
+---
+- name: Удаляем переменную
+  hosts: all
+  tasks:
+    - name: Удаляем пеоременную в /etc/profile
+      lineinfile:
+        path: /etc/profile
+        regexp: "^MY_VAR="
+        line: "MY_VAR={{ some_variable }}"
+        state: absent
+      become: true
+
+    - name: Удаляем пеоременную в /etc/environment
+      lineinfile:
+        path: /etc/environment
+        regexp: "^MY_VAR="
+        line: "MY_VAR={{ some_variable }}"
+        state: absent
+      become: true
