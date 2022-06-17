@@ -2,7 +2,7 @@
 # - name: Создаём переменную
 #   hosts: all
 #   tasks:
-#     - name: Создаём пеоременную в /etc/profile
+#     - name: Создаём переменную в /etc/profile
 #       lineinfile:
 #         path: /etc/profile
 #         regexp: "^MY_VAR="
@@ -10,7 +10,7 @@
 #         state: present
 #       become: true
 
-#     - name: Создаём пеоременную в /etc/environment
+#     - name: Создаём переменную в /etc/environment
 #       lineinfile:
 #         path: /etc/environment
 #         regexp: "^MY_VAR="

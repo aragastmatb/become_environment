@@ -2,7 +2,7 @@
 - name: Удаляем переменную
   hosts: all
   tasks:
-    - name: Удаляем пеоременную в /etc/profile
+    - name: Удаляем переменную в /etc/profile
       lineinfile:
         path: /etc/profile
         regexp: "^MY_VAR="
@@ -10,7 +10,7 @@
         state: absent
       become: true
 
-    - name: Удаляем пеоременную в /etc/environment
+    - name: Удаляем переменную в /etc/environment
       lineinfile:
         path: /etc/environment
         regexp: "^MY_VAR="
